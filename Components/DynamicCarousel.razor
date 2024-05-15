@@ -1,0 +1,54 @@
+﻿@inherits CarouselBase
+
+@{
+    base.BuildRenderTree(__builder);
+}
+
+@code {
+
+    [Parameter]
+    public required Type ItemType { get; set; }
+
+    [Parameter]
+    public IDictionary<string, object>[]? ItemsParameters { get; set; }
+
+    private DynamicComponent[] carouselItems;
+
+    private int lastSlideIndex = -1;
+
+    protected override void OnInitialized()
+    {
+        if (ItemsParameters == null)
+            return;
+
+        totalNumberOfItems = ItemsParameters.Length;
+        carouselItems = new DynamicComponent[totalNumberOfItems];
+        Items = new RenderFragment[totalNumberOfItems];
+        for (int i = 0; i < totalNumberOfItems; i++)
+            Items[i] = CreateItem(i);
+
+        base.OnInitialized();
+    }
+
+    private RenderFragment CreateItem(int index)
+    {
+        return@<DynamicComponent Type="ItemType" Parameters="ItemsParameters[index]" @ref="carouselItems[index]"></DynamicComponent>;
+    }
+
+    protected override async Task ScrollTo(int position)
+    {
+        lastSlideIndex = currentPosition;
+        await base.ScrollTo(position);
+    }
+
+    protected override void OnFinishedScrolling()
+    {
+        if (carouselItems == null)
+            return;
+        (carouselItems[currentPosition].Instance as ICarouselComponent).StartRendering();
+        if (lastSlideIndex != currentPosition && lastSlideIndex >= 0)
+        {
+            (carouselItems[lastSlideIndex].Instance as ICarouselComponent).StopRendering();
+        }
+    }
+}
