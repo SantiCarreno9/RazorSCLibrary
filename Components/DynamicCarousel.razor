@@ -1,4 +1,4 @@
-﻿@inherits CarouselBase
+@inherits CarouselBase
 
 @{
     base.BuildRenderTree(__builder);
@@ -6,11 +6,8 @@
 
 @code {
 
-    [Parameter]
-    public required Type ItemType { get; set; }
-
-    [Parameter]
-    public IDictionary<string, object>[]? ItemsParameters { get; set; }
+    [Parameter] public required Type ItemType { get; set; }
+    [Parameter] public IDictionary<string, object>[]? ItemsParameters { get; set; }
 
     private DynamicComponent[] carouselItems;
 
@@ -18,10 +15,11 @@
 
     protected override void OnInitialized()
     {
-        if (ItemsParameters == null)
+        if (ItemsParameters == null || ItemsParameters.Count() == 0)
             return;
 
         totalNumberOfItems = ItemsParameters.Length;
+
         carouselItems = new DynamicComponent[totalNumberOfItems];
         Items = new RenderFragment[totalNumberOfItems];
         for (int i = 0; i < totalNumberOfItems; i++)
@@ -32,23 +30,44 @@
 
     private RenderFragment CreateItem(int index)
     {
+        if (ItemsParameters == null)
+            return @<></>;
         return@<DynamicComponent Type="ItemType" Parameters="ItemsParameters[index]" @ref="carouselItems[index]"></DynamicComponent>;
     }
 
-    protected override async Task ScrollTo(int position)
+    protected override void ScrollLeft()
     {
-        lastSlideIndex = currentPosition;
-        await base.ScrollTo(position);
+        lastSlideIndex = currentSlide;
+        base.ScrollLeft();
     }
 
-    protected override void OnFinishedScrolling()
+    protected override void ScrollRight()
     {
-        if (carouselItems == null)
+        lastSlideIndex = currentSlide;
+        base.ScrollRight();
+    }
+
+    protected override void OnCarouselFocused()
+    {
+        base.OnCarouselFocused();
+        PlayCurrentSlide();
+    }
+
+    private void PlayCurrentSlide()
+    {
+        if (carouselItems == null || carouselItems.Length == 0 || carouselItems.Length <= currentSlide)
             return;
-        (carouselItems[currentPosition].Instance as ICarouselComponent).StartRendering();
-        if (lastSlideIndex != currentPosition && lastSlideIndex >= 0)
-        {
-            (carouselItems[lastSlideIndex].Instance as ICarouselComponent).StopRendering();
-        }
+
+        (carouselItems[currentSlide].Instance as ICarouselComponent)?.StartRendering();
+    }
+
+    protected override void OnItemFocused(int id)
+    {
+        base.OnItemFocused(id);
+        lastSlideIndex = id;
+        currentSlide = id;
+        PlayCurrentSlide();
+        if (lastSlideIndex != currentSlide && lastSlideIndex >= 0)
+            (carouselItems[lastSlideIndex].Instance as ICarouselComponent)?.StopRendering();
     }
 }

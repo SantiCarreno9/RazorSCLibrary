@@ -1,28 +1,54 @@
-<div class="custom-container">
-    <div class="horizontal-scroller-container">
-        <button class="scroll-btn prev-btn" @onclick="ScrollLeft">            
+@using Microsoft.AspNetCore.Components.Routing
+
+<div id="#@Id" class="custom-container">
+    <div class="horizontal-scroller-container">     
+@*         <NavLink href="#unity-3">
+            <div class="scroll-btn">
+                <i class="arrow left" />
+            </div>            
+        </NavLink> *@
+        <div class="scroll-btn" @onclick="ScrollLeft">
             <i class="arrow left" />
-        </button>
-        <div class="horizontal-scroller" @ref=@scrollerReference>
-            @if (Items != null)
+        </div>
+       @*  <a class="scroll-btn" @onclick="ScrollLeft" href="@($"#{GetFullId(currentSlide)}")" target="_top">
+            <i class="arrow left" />
+        </a> *@
+        <div class="horizontal-scroller">
+            @if (Content != null)
             {
-                @foreach (var item in Items)
+                <div class="item">
+                    @Content
+                </div>
+            }
+            else
+            {
+                @if (Items != null)
                 {
-                    <div class="item">
-                        @item
-                    </div>
+                    @foreach (int i in Enumerable.Range(0, Items.Length))
+                    {
+                        <div id="@GetFullId(i)" class="item">
+                            @Items[i]
+                        </div>
+                    }
                 }
             }
         </div>
 
-        <button class="scroll-btn" @onclick="ScrollRight">
+        <div class="scroll-btn" @onclick="ScrollRight">
             <i class="arrow right" />
-        </button>
+        </div>
+       @*  <a class="scroll-btn" @onclick="ScrollRight" href="@($"#{GetFullId(currentSlide)}")" target="_top">
+            <i class="arrow right" />
+        </a> *@
     </div>
     <div class="indicators-container">
-        @foreach (var item in Enumerable.Range(0, totalNumberOfItems))
+        @foreach (int i in Enumerable.Range(0, totalNumberOfItems))
         {
-            <button class="content-indicator @(currentPosition==item?"current":"")" @onclick="()=>ScrollTo(item)" />
+@*             <Microsoft.AspNetCore.Components.Routing.NavLink ActiveClass="current" href="@($"#{GetFullId(i)}")">
+                <span class="content-indicator @(currentSlide==i?"current":"")"/>
+            </Microsoft.AspNetCore.Components.Routing.NavLink> *@
+            @* <a class="content-indicator @(currentSlide==i?"current":"")" href="@($"#{GetFullId(i)}")" target="_top" /> *@
+            <div class="content-indicator @(currentSlide==i?"current":"")" @onclick="()=>ScrollTo(i)"/>
         }
     </div>
 </div>
