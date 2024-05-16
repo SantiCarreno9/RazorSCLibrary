@@ -1,49 +1,85 @@
 using Microsoft.AspNetCore.Components;
-using Microsoft.JSInterop;
+using Microsoft.AspNetCore.Components.Routing;
 
 namespace RazorSCLibrary.Components
 {
-    public abstract partial class CarouselBase : ComponentBase
+    public abstract partial class CarouselBase : ComponentBase, IDisposable
     {
         [Inject]
-        IJSRuntime JSRuntime { get; set; }
+        public NavigationManager NavigationManager { get; set; }
 
-        JsMethods JsMethods { get; set; }
+        private IDisposable registration;
+        [CascadingParameter]
+        public string ParentId { get; set; }
 
-        public RenderFragment[] Items { get; set; }
+        [Parameter] public required string Id { get; set; }
 
-        private ElementReference scrollerReference;
+        public RenderFragment? Content { get; set; }
+        public RenderFragment[]? Items { get; set; }
 
-        protected int currentPosition = 0;
-        protected int totalNumberOfItems = 5;
+        protected int currentSlide = 0;
+        protected int totalNumberOfItems = 0;
 
         protected override void OnInitialized()
-        {
+        {                   
+            Console.WriteLine(ParentId);
             base.OnInitialized();
-            JsMethods = new(JSRuntime);
         }
 
-        protected async Task ScrollLeft()
+        protected override Task OnAfterRenderAsync(bool firstRender)
         {
-            int nextPosition = (currentPosition == 0) ? totalNumberOfItems - 1 : currentPosition - 1;
-            await ScrollTo(nextPosition);
+            if (firstRender)
+            {
+                registration = NavigationManager.RegisterLocationChangingHandler(LocationChangingHandler);
+            }
+            return base.OnAfterRenderAsync(firstRender);
         }
 
-        protected async Task ScrollRight()
+        private async ValueTask LocationChangingHandler(LocationChangingContext context)
         {
-            int nextPosition = (currentPosition == totalNumberOfItems - 1) ? 0 : currentPosition + 1;
-            await ScrollTo(nextPosition);
+            string newUri = context.TargetLocation;
+            Console.WriteLine(newUri);
+            if (newUri.Equals("#" + ParentId))
+                OnCarouselFocused();
+            else if (newUri.Contains("#" + Id))
+                OnItemFocused(int.Parse(newUri.Substring(("#" + Id + "-").Length)));
         }
 
-        protected virtual async Task ScrollTo(int position)
+        protected virtual void ScrollLeft()
         {
-            int delta = position - currentPosition;
-            currentPosition = position;
-            bool finished = await JsMethods.ScrollLeft(scrollerReference, delta);
-            if (finished)
-                OnFinishedScrolling();
+            int nextPosition = (currentSlide == 0) ? totalNumberOfItems - 1 : currentSlide - 1;            
+            ScrollTo(nextPosition);
+        }
+
+        protected virtual void ScrollRight()
+        {
+            int nextPosition = (currentSlide == totalNumberOfItems - 1) ? 0 : currentSlide + 1;            
+            ScrollTo(nextPosition);
+        }
+
+        protected virtual void ScrollTo(int index)
+        {
+            currentSlide = index;
+            NavigationManager.NavigateTo($"#{GetFullId(index)}", false);
+        }
+
+        private string GetFullId(int id) => $"{Id}-{id}";
+
+        protected virtual void OnCarouselFocused()
+        {
+            Console.WriteLine("Carousel Focused");
+        }
+
+        protected virtual void OnItemFocused(int id)
+        {
+            Console.WriteLine("Item" + id + " focused");
         }
 
         protected virtual void OnFinishedScrolling() { }
+
+        public void Dispose()
+        {
+            registration?.Dispose();            
+        }
     }
 }

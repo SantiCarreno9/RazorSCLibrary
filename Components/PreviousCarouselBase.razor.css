@@ -7,15 +7,13 @@
     display: flex;
     flex-direction: column;
     height: 100%;
-    scroll-behavior: smooth;
 }
 
 .horizontal-scroller-container {
     flex: 1;
     display: flex;
     flex-direction: row;
-    scroll-behavior: smooth;
-    direction:ltr;    
+    /*padding: 2vh 0 2vh 0;*/
     height: 100%;
 }
 
@@ -23,27 +21,26 @@
     flex: 1;
     display: flex;
     overflow-x: scroll;
-    scroll-behavior: smooth;
     scroll-snap-align: center;
     scroll-snap-type: x mandatory;
-    scrollbar-width: none;    
+    scrollbar-width: none;
+    /*pointer-events: none;*/
 }
 
 .item {
     flex: 1;
     min-width: var(--content-width);
     scroll-snap-align: center;
-    scroll-snap-type: x proximity;    
-}
+    scroll-snap-type: x proximity;
+    /*pointer-events: none;*/     
+}    
 
 .scroll-btn {
-    cursor:pointer;
     background: transparent;
-    align-content: center;
-    text-align: center;
-    justify-content: center;
+    border: none;
+    top: 50%;
     min-width: var(--arrow-width);    
-}   
+}
 
     .scroll-btn:hover {
         background-color: var(--hover-color);
@@ -59,7 +56,6 @@
 }
 
 .content-indicator {
-    cursor:pointer;
     background-color: white;
     opacity: 0.5;
     border-radius: 25px;

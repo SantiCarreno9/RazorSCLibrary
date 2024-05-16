@@ -1,0 +1,19 @@
+<div class="dropdown @(isSelected?"active":"")">
+    <div class="bar-button-container @(isSelected?"active":"")">
+        <div class="bar-button" @onclick="TriggerAction">
+            @Title
+        </div>
+        <div class="button-label">
+            @Text
+        </div>
+    </div>
+    @if (DropdownItems != null)
+    {
+        <div class="dropdown-content">
+            @foreach (var item in DropdownItems)
+            {
+                @* <div class="dropdown-item-label" @onclick="()=>item.OnClickedAction()">@item.Text</div> *@
+            }
+        </div>
+    }
+</div>
