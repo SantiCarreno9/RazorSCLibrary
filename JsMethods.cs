@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
 
 namespace RazorSCLibrary
@@ -22,7 +22,7 @@ namespace RazorSCLibrary
         public async ValueTask<bool> ScrollLeft(ElementReference element, int amount)
         {
             var module = await moduleTask.Value;
-            return await module.InvokeAsync<bool>("scrollLeft", element,amount);
+            return await module.InvokeAsync<bool>("scrollLeft", element, amount);
         }
 
         public async ValueTask DisposeAsync()

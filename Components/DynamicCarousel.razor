@@ -33,18 +33,12 @@
         if (ItemsParameters == null)
             return @<></>;
         return@<DynamicComponent Type="ItemType" Parameters="ItemsParameters[index]" @ref="carouselItems[index]"></DynamicComponent>;
-    }
+    }    
 
-    protected override void ScrollLeft()
+    protected override void ScrollTo(int index)
     {
         lastSlideIndex = currentSlide;
-        base.ScrollLeft();
-    }
-
-    protected override void ScrollRight()
-    {
-        lastSlideIndex = currentSlide;
-        base.ScrollRight();
+        base.ScrollTo(index);
     }
 
     protected override void OnCarouselFocused()
@@ -63,9 +57,8 @@
 
     protected override void OnItemFocused(int id)
     {
-        base.OnItemFocused(id);
-        lastSlideIndex = id;
-        currentSlide = id;
+        lastSlideIndex = currentSlide;
+        base.OnItemFocused(id);                
         PlayCurrentSlide();
         if (lastSlideIndex != currentSlide && lastSlideIndex >= 0)
             (carouselItems[lastSlideIndex].Instance as ICarouselComponent)?.StopRendering();
