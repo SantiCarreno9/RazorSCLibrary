@@ -3,16 +3,8 @@
 <div id="@Id" class="custom-container">
     <div class="horizontal-scroller-container">
         <div class="scroll-btn" @onclick="ScrollLeft">
-        <i class="arrow left" />
-        </div>
-        @* <NavLink class="scroll-btn" @onclick="ScrollLeft" href="@($"#{GetFullId(currentSlide)}")" target="_top">
-        <div class="scroll-btn">
-        <i class="arrow left" />
-        </div>
-        </NavLink> *@
-@*         <a class="scroll-btn" @onclick="ScrollLeft" href="@($"#{GetFullId(currentSlide)}")" target="_self">
             <i class="arrow left" />
-        </a> *@
+        </div>
         <div class="horizontal-scroller">
             @if (Items != null)
             {
@@ -27,9 +19,6 @@
         <div class="scroll-btn" @onclick="ScrollRight">
             <i class="arrow right" />
         </div>
-        @* <a class="scroll-btn" @onclick="ScrollRight" href="@($"#{GetFullId(currentSlide)}")">
-            <i class="arrow right" />
-        </a> *@
     </div>
     <div class="indicators-container">
         @foreach (int i in Enumerable.Range(0, totalNumberOfItems))

@@ -7,10 +7,9 @@ namespace RazorSCLibrary.Components
     {
         [Inject]
         public NavigationManager NavigationManager { get; set; }
-        private IDisposable registration;
 
         [CascadingParameter]
-        public string ParentId { get; set; }
+        public string? ParentId { get; set; }
 
         [Parameter] public required string Id { get; set; }
 
@@ -21,33 +20,13 @@ namespace RazorSCLibrary.Components
 
         protected override void OnInitialized()
         {
-            Console.WriteLine(ParentId);
             NavigationManager.LocationChanged += NavigationManager_LocationChanged;
             base.OnInitialized();
         }
 
         private void NavigationManager_LocationChanged(object? sender, LocationChangedEventArgs e)
         {
-            Console.WriteLine(e.Location);
             OnLocationChanged(e.Location.Substring(NavigationManager.BaseUri.Length));
-        }
-
-        protected override async Task OnAfterRenderAsync(bool firstRender)
-        {
-            if (firstRender)
-            {
-                //registration = NavigationManager.RegisterLocationChangingHandler(LocationChangingHandler);
-            }
-            await base.OnAfterRenderAsync(firstRender);
-        }
-
-        private async ValueTask LocationChangingHandler(LocationChangingContext context)
-        {
-            string newUri = context.TargetLocation;
-            Console.WriteLine(newUri);
-            OnLocationChanged(newUri);
-
-            await ValueTask.CompletedTask;
         }
 
         protected virtual void ScrollLeft()
@@ -65,7 +44,7 @@ namespace RazorSCLibrary.Components
         protected virtual void ScrollTo(int index)
         {
             currentSlide = index;
-            NavigationManager.NavigateTo($"#{GetFullId(index)}",true);
+            NavigationManager.NavigateTo($"#{GetFullId(index)}", true, true);
         }
 
         private string GetFullId(int id) => $"{Id}-{id}";
@@ -78,21 +57,17 @@ namespace RazorSCLibrary.Components
                 OnItemFocused(int.Parse(locationId.Substring(("#" + Id + "-").Length)));
         }
 
-        protected virtual void OnCarouselFocused()
-        {
-            Console.WriteLine("Carousel Focused");
-        }
+        protected virtual void OnCarouselFocused(){}
 
         protected virtual void OnItemFocused(int id)
         {
             currentSlide = id;
-            Console.WriteLine("Item" + id + " focused");
+            StateHasChanged();            
         }
 
         public void Dispose()
         {
             NavigationManager.LocationChanged -= NavigationManager_LocationChanged;
-            registration?.Dispose();
         }
     }
 }
