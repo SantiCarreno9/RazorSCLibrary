@@ -29,3 +29,22 @@ export function scrollLeft(container, amount) {
         });
     }
 };
+
+export function muteVideo(element) {
+    element.muted = true;
+}
+
+export function pauseVideo(element) {
+    if (!element.paused)
+        element.pause();
+}
+
+export function playVideo(element) {
+    element.play();
+}
+
+export function stopWebVideo(iframe) {
+    //Reassigns source video to "stop it"
+    let iframeSrc = iframe.src;
+    iframe.src = iframeSrc;
+}

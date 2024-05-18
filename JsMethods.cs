@@ -1,3 +1,5 @@
+using System.Xml.Linq;
+
 using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
 
@@ -24,6 +26,24 @@ namespace RazorSCLibrary
             var module = await moduleTask.Value;
             return await module.InvokeAsync<bool>("scrollLeft", element, amount);
         }
+
+        #region Video Methods
+
+        public async ValueTask PlayVideo(ElementReference video)
+        {
+            var module = await moduleTask.Value;
+            await module.InvokeVoidAsync("playVideo", video);
+        }
+
+        public async ValueTask PauseVideo(ElementReference video, bool isIFrame = false)
+        {
+            var module = await moduleTask.Value;
+            if (!isIFrame)
+                await module.InvokeVoidAsync("pauseVideo", video);
+            else await module.InvokeVoidAsync("stopWebVideo", video);
+        }        
+
+        #endregion
 
         public async ValueTask DisposeAsync()
         {
