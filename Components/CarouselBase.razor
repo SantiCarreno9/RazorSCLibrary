@@ -6,6 +6,11 @@
             <i class="arrow left" />
         </div>
         <div class="horizontal-scroller">
+            @* <div id="@GetFullId(0)" style="background-color:black" class="item"></div>
+            <div id="@GetFullId(1)" style="background-color:white" class="item"></div>
+            <div id="@GetFullId(2)" style="background-color:red" class="item"></div>
+            <div id="@GetFullId(3)" style="background-color:blue" class="item"></div>
+            <div id="@GetFullId(4)" style="background-color:green" class="item"></div> *@
             @if (Items != null)
             {
                 @foreach (int i in Enumerable.Range(0, Items.Length))

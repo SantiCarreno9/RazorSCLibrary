@@ -1,6 +1,6 @@
 ::deep {
-    --min-arrow-width: 10%;
-    --content-width: calc(100% - calc(var(--min-arrow-width)*2));
+    --arrow-width: 10%;
+    --content-width: calc(100vw - calc(var(--arrow-width)*2));
 }
 
 .custom-container {
@@ -20,29 +20,32 @@
 .horizontal-scroller {
     flex: 1;
     display: flex;
-    overflow-x: hidden;
+    overflow-x: hidden;    
     scroll-behavior: smooth !important;
+    /*This property restricts the position of the item on the scroll*/
+    scroll-snap-type: x mandatory;
     scrollbar-width: none;
     min-width: var(--content-width);
 }
 
 .item {
-    flex: 1;
-    min-width: 100%;        
-    padding: 0 3%;    
+    min-width: 100%;
+    /*This property restricts the position of the item on the scroll*/
+    scroll-snap-align: center;
 }
 
 .scroll-btn {
     cursor: pointer;
-    background: rgba(0,0,0,0);
+    background: transparent;
     align-content: center;
     text-align: center;
     justify-content: center;
-    min-width: var(--min-arrow-width);
+    min-width: var(--arrow-width);
 }
 
-    .scroll-btn:hover i {
-        color: red;
+    .scroll-btn:hover {
+        background-color: var(--hover-color);
+        opacity: 0.5;
     }
 
 .indicators-container {
