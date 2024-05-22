@@ -1,0 +1,27 @@
+<div class="carousel-container">
+    <div class="horizontal-scroller-container">
+        <div class="scroll-btn" @onclick="ScrollLeft">
+            <i class="arrow left" />
+        </div>
+        <div class="horizontal-scroller" @ref=scrollerReference>
+            @if (Items != null)
+            {
+                @foreach (int i in Enumerable.Range(0, Items.Length))
+                {
+                    <div class="item">                        
+                        @Items[i]
+                    </div>
+                }
+            }
+        </div>
+        <div class="scroll-btn" @onclick="ScrollRight">
+            <i class="arrow right" />
+        </div>
+    </div>
+    <div class="indicators-container">
+        @foreach (int i in Enumerable.Range(0, totalNumberOfItems))
+        {
+            <div class="content-indicator @(currentSlide==i?"current":"")" @onclick="()=>ScrollTo(i)" />
+        }
+    </div>
+</div>

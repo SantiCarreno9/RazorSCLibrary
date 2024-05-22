@@ -1,4 +1,4 @@
-@inherits CarouselBase
+@inherits CarouselByScript
 
 @{
     base.BuildRenderTree(__builder);
@@ -28,22 +28,29 @@
         base.OnInitialized();
     }
 
+    // protected override void OnAfterRender(bool firstRender)
+    // {
+    //     base.OnAfterRender(firstRender);
+    //     if (firstRender)
+    //         PlayCurrentSlide();
+    // }
+
     private RenderFragment CreateItem(int index)
     {
         if (ItemsParameters == null)
             return @<></>;
         return@<DynamicComponent Type="ItemType" Parameters="ItemsParameters[index]" @ref="carouselItems[index]"></DynamicComponent>;
-    }    
-
-    protected override void ScrollTo(int index)
-    {
-        lastSlideIndex = currentSlide;
-        base.ScrollTo(index);
     }
 
-    protected override void OnCarouselFocused()
+    protected override Task ScrollTo(int position)
     {
-        base.OnCarouselFocused();
+        lastSlideIndex = currentSlide;
+        return base.ScrollTo(position);
+    }
+
+    protected override void OnFinishedScrolling()
+    {
+        base.OnFinishedScrolling();
         PlayCurrentSlide();
     }
 
@@ -53,13 +60,19 @@
             return;
 
         (carouselItems[currentSlide].Instance as ICarouselComponent)?.StartRendering();
+
+        if (lastSlideIndex != currentSlide && lastSlideIndex >= 0)
+        {
+            (carouselItems[lastSlideIndex].Instance as ICarouselComponent)?.StopRendering();
+            lastSlideIndex = -1;
+        }
     }
 
-    protected override void OnItemFocused(int id)
-    {
-        base.OnItemFocused(id);                
-        PlayCurrentSlide();
-        if (lastSlideIndex != currentSlide && lastSlideIndex >= 0)
-            (carouselItems[lastSlideIndex].Instance as ICarouselComponent)?.StopRendering();
-    }
+    // protected override void OnItemFocused(int id)
+    // {
+    //     base.OnItemFocused(id);
+    //     PlayCurrentSlide();
+    //     if (lastSlideIndex != currentSlide && lastSlideIndex >= 0)
+    //         (carouselItems[lastSlideIndex].Instance as ICarouselComponent)?.StopRendering();
+    // }
 }

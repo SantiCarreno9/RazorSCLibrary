@@ -1,66 +1,73 @@
 ::deep {
-    --arrow-width: 5vw;
+    --arrow-width: 10%;
     --content-width: calc(100vw - calc(var(--arrow-width)*2));
 }
 
 .custom-container {
+    flex:1;
     display: flex;
     flex-direction: column;
     height: 100%;
+    width: 100%;
+    /*max-height:inherit;*/
 }
 
 .horizontal-scroller-container {
     flex: 1;
     display: flex;
     flex-direction: row;
-    /*padding: 2vh 0 2vh 0;*/
-    height: 100%;
+    width: 100%;
+    /*min-height: 90%;*/
 }
 
 .horizontal-scroller {
     flex: 1;
     display: flex;
-    overflow-x: scroll;
-    scroll-snap-align: center;
+    overflow-x: hidden;
+    overflow-y:auto;
+    scroll-behavior: smooth !important;
+    /*This property restricts the position of the item on the scroll*/
     scroll-snap-type: x mandatory;
     scrollbar-width: none;
-    /*pointer-events: none;*/
+    min-width: var(--content-width);
 }
 
 .item {
-    flex: 1;
-    min-width: var(--content-width);
+    min-width: 100%;
+    /*This property restricts the position of the item on the scroll*/
     scroll-snap-align: center;
-    scroll-snap-type: x proximity;
-    /*pointer-events: none;*/     
-}    
-
-.scroll-btn {
-    background: transparent;
-    border: none;
-    top: 50%;
-    min-width: var(--arrow-width);    
 }
 
-    .scroll-btn:hover {
-        background-color: var(--hover-color);
+.scroll-btn {
+    cursor: pointer;
+    background: transparent;
+    align-content: center;
+    text-align: center;
+    justify-content: center;
+    min-width: var(--arrow-width);
+}
+
+    .scroll-btn:hover i {
         opacity: 0.5;
     }
 
 .indicators-container {
-    padding: 2vh;
+    align-items: center;
+    height: 100%;
     display: flex;
     justify-content: center;
     gap: 10px;
-    height: 6%;
+    min-height: 0.5rem;
 }
 
 .content-indicator {
+    cursor: pointer;
     background-color: white;
     opacity: 0.5;
     border-radius: 25px;
     border-width: 0;
     width: 5%;
+    height: 0.5rem;
 }
 
     .content-indicator.current {

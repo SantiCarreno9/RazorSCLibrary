@@ -13,7 +13,7 @@ export function isElementVisible(element) {
 
 export function scrollLeft(container, amount) {
     if (container) {
-        const scrollAmount = amount * window.innerWidth;
+        const scrollAmount = amount * container.clientWidth;
         const currentPosition = container.scrollLeft;
         const newPosition = currentPosition + scrollAmount;
 

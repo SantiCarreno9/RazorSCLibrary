@@ -21,7 +21,7 @@ namespace RazorSCLibrary
             return await module.InvokeAsync<bool>("isElementVisible", element);
         }
 
-        public async ValueTask<bool> ScrollLeft(ElementReference element, int amount)
+        public async ValueTask<bool> ScrollLeft(ElementReference element,int amount)
         {
             var module = await moduleTask.Value;
             return await module.InvokeAsync<bool>("scrollLeft", element, amount);

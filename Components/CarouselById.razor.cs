@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Components.Routing;
 
 namespace RazorSCLibrary.Components
 {
-    public abstract partial class CarouselBase : ComponentBase, IDisposable
+    public abstract partial class CarouselById : ComponentBase, IDisposable
     {
         [Inject]
         public NavigationManager NavigationManager { get; set; }

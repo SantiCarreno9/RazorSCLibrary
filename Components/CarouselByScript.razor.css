@@ -3,58 +3,60 @@
     --content-width: calc(100vw - calc(var(--arrow-width)*2));
 }
 
-.custom-container {
+.carousel-container {
+    flex: 1;
     display: flex;
     flex-direction: column;
-    height: 100%;
+    justify-content: stretch;
+    width: 100%;
+    max-height:inherit;
 }
 
 .horizontal-scroller-container {
     flex: 1;
     display: flex;
     flex-direction: row;
-    width: 100%;
-    min-height: 90%;
 }
 
 .horizontal-scroller {
     flex: 1;
     display: flex;
-    overflow-x: hidden;    
+    overflow-x: hidden;
+    overflow-y: auto;
     scroll-behavior: smooth !important;
     /*This property restricts the position of the item on the scroll*/
     scroll-snap-type: x mandatory;
     scrollbar-width: none;
-    min-width: var(--content-width);
+    width: var(--content-width);
 }
 
 .item {
+    display: flex;
     min-width: 100%;
     /*This property restricts the position of the item on the scroll*/
     scroll-snap-align: center;
 }
 
 .scroll-btn {
+    height: 100%;
     cursor: pointer;
     background: transparent;
     align-content: center;
     text-align: center;
     justify-content: center;
-    min-width: var(--arrow-width);
+    width: var(--arrow-width);
 }
 
-    .scroll-btn:hover {
-        background-color: var(--hover-color);
+    .scroll-btn:hover i {
         opacity: 0.5;
     }
 
 .indicators-container {
     align-items: center;
-    height: 100%;
     display: flex;
     justify-content: center;
     gap: 10px;
-    min-height: 0.5rem;
+    min-height: 10%;
 }
 
 .content-indicator {
