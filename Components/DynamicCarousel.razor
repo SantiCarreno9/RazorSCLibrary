@@ -8,71 +8,85 @@
 
     [Parameter] public required Type ItemType { get; set; }
     [Parameter] public IDictionary<string, object>[]? ItemsParameters { get; set; }
+    [Parameter] public int? IndexToDisplay { get; set; }
 
-    private DynamicComponent[] carouselItems;
+    private int currentVisibleItem = 0;
+    private Dictionary<int, DynamicComponent> carouselItems = new();
+    private RenderFragment[] tempItems;
 
     private int lastSlideIndex = -1;
+    private bool shouldRerender = false;
 
     protected override void OnInitialized()
     {
         if (ItemsParameters == null || ItemsParameters.Count() == 0)
-            return;
+            return;        
 
         totalNumberOfItems = ItemsParameters.Length;
-
-        carouselItems = new DynamicComponent[totalNumberOfItems];
-        Items = new RenderFragment[totalNumberOfItems];
-        for (int i = 0; i < totalNumberOfItems; i++)
-            Items[i] = CreateItem(i);
-
+        tempItems = new RenderFragment[totalNumberOfItems];
+        Items = tempItems;
         base.OnInitialized();
+        if (!IndexToDisplay.HasValue || IndexToDisplay == currentIndex)
+            OnItemFocused();
     }
 
-    // protected override void OnAfterRender(bool firstRender)
-    // {
-    //     base.OnAfterRender(firstRender);
-    //     if (firstRender)
-    //         PlayCurrentSlide();
-    // }
+    protected override void OnParametersSet()
+    {
+        base.OnParametersSet();
+        if (IndexToDisplay.HasValue)
+            currentVisibleItem = IndexToDisplay.Value;
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        await base.OnAfterRenderAsync(firstRender);
+        if (IndexToDisplay.HasValue)
+        {
+            if (currentVisibleItem != currentIndex)
+            {
+                shouldRerender = true;
+                await ShowItem(currentVisibleItem);
+            }
+        }        
+    }
 
     private RenderFragment CreateItem(int index)
     {
         if (ItemsParameters == null)
             return @<></>;
+        carouselItems.Add(index, null);
         return@<DynamicComponent Type="ItemType" Parameters="ItemsParameters[index]" @ref="carouselItems[index]"></DynamicComponent>;
     }
 
-    protected override Task ScrollTo(int position)
+    protected override async Task ShowItem(int position)
     {
-        lastSlideIndex = currentSlide;
-        return base.ScrollTo(position);
+        lastSlideIndex = currentIndex;
+        currentVisibleItem = position;
+        await base.ShowItem(position);
     }
 
-    protected override void OnFinishedScrolling()
+    protected override void OnItemFocused()
     {
-        base.OnFinishedScrolling();
-        PlayCurrentSlide();
-    }
+        base.OnItemFocused();
+        if (!carouselItems.ContainsKey(currentIndex))
+        {
+            tempItems[currentIndex] = CreateItem(currentIndex);
+            if (shouldRerender)
+            {
+                StateHasChanged();
+                shouldRerender = false;
+            }
+        }
+        else
+        {
+            if (carouselItems.ContainsKey(currentIndex))
+                (carouselItems[currentIndex].Instance as ICarouselComponent)?.StartRendering();
+        }
 
-    private void PlayCurrentSlide()
-    {
-        if (carouselItems == null || carouselItems.Length == 0 || carouselItems.Length <= currentSlide)
-            return;
-
-        (carouselItems[currentSlide].Instance as ICarouselComponent)?.StartRendering();
-
-        if (lastSlideIndex != currentSlide && lastSlideIndex >= 0)
+        if (carouselItems.ContainsKey(lastSlideIndex))
         {
             (carouselItems[lastSlideIndex].Instance as ICarouselComponent)?.StopRendering();
             lastSlideIndex = -1;
         }
     }
-
-    // protected override void OnItemFocused(int id)
-    // {
-    //     base.OnItemFocused(id);
-    //     PlayCurrentSlide();
-    //     if (lastSlideIndex != currentSlide && lastSlideIndex >= 0)
-    //         (carouselItems[lastSlideIndex].Instance as ICarouselComponent)?.StopRendering();
-    // }
 }

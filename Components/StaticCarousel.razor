@@ -1,0 +1,64 @@
+@inherits CarouselByScript
+
+@{
+    base.BuildRenderTree(__builder);
+}
+
+@code {
+
+    [Parameter] public required Type ItemType { get; set; }
+    [Parameter] public IDictionary<string, object>[]? ItemsParameters { get; set; }
+
+    private DynamicComponent[] carouselItems;
+
+    private int lastSlideIndex = -1;
+
+    protected override void OnInitialized()
+    {
+        if (ItemsParameters == null || ItemsParameters.Count() == 0)
+            return;
+
+        totalNumberOfItems = ItemsParameters.Length;
+
+        carouselItems = new DynamicComponent[totalNumberOfItems];
+        var items = new RenderFragment[totalNumberOfItems];
+        for (int i = 0; i < totalNumberOfItems; i++)
+            items[i] = CreateItem(i);
+
+        Items = items;
+        base.OnInitialized();
+    }
+
+    private RenderFragment CreateItem(int index)
+    {
+        if (ItemsParameters == null)
+            return @<></>;
+        return@<DynamicComponent Type="ItemType" Parameters="ItemsParameters[index]" @ref="carouselItems[index]"></DynamicComponent>;
+    }
+
+    protected override async Task ShowItem(int position)
+    {
+        lastSlideIndex = currentIndex;
+        await base.ShowItem(position);
+    }
+
+    protected override void OnItemFocused()
+    {
+        base.OnItemFocused();
+        PlayCurrentSlide();
+    }
+
+    private void PlayCurrentSlide()
+    {
+        if (carouselItems == null || carouselItems.Length == 0 || carouselItems.Length <= currentIndex)
+            return;
+
+        (carouselItems[currentIndex].Instance as ICarouselComponent)?.StartRendering();
+
+        if (lastSlideIndex != currentIndex && lastSlideIndex >= 0)
+        {
+            (carouselItems[lastSlideIndex].Instance as ICarouselComponent)?.StopRendering();
+            lastSlideIndex = -1;
+        }
+    }
+}

@@ -1,4 +1,4 @@
-::deep {
+/*::deep {
     --arrow-width: 10%;
     --content-width: calc(100vw - calc(var(--arrow-width)*2));
 }
@@ -8,34 +8,34 @@
     display: flex;
     flex-direction: column;
     height: 100%;
-    width: 100%;
+    width: 100%;*/
     /*max-height:inherit;*/
-}
+/*}
 
 .horizontal-scroller-container {
     flex: 1;
     display: flex;
     flex-direction: row;
-    width: 100%;
+    width: 100%;*/
     /*min-height: 90%;*/
-}
+/*}
 
 .horizontal-scroller {
     flex: 1;
     display: flex;
     overflow-x: hidden;
     overflow-y:auto;
-    scroll-behavior: smooth !important;
+    scroll-behavior: smooth !important;*/
     /*This property restricts the position of the item on the scroll*/
-    scroll-snap-type: x mandatory;
+    /*scroll-snap-type: x mandatory;
     scrollbar-width: none;
     min-width: var(--content-width);
 }
 
 .item {
-    min-width: 100%;
+    min-width: 100%;*/
     /*This property restricts the position of the item on the scroll*/
-    scroll-snap-align: center;
+    /*scroll-snap-align: center;
 }
 
 .scroll-btn {
@@ -72,4 +72,4 @@
 
     .content-indicator.current {
         opacity: 1;
-    }
+    }*/

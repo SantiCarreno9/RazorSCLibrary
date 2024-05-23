@@ -1,0 +1,44 @@
+<div class="carousel-container">
+    <div class="horizontal-scroller-container">
+        <div class="scroll-btn" @onclick="ShowPreviousItem">
+            <i class="arrow left" />
+        </div>
+        <div class="horizontal-scroller" @ref=contentContainerReference>
+            @if (Items != null)
+            {
+                @foreach (var i in Enumerable.Range(0, totalNumberOfItems))
+                {
+                    <div class="item">
+                        @if (Items.ElementAt(i) != null)
+                            @Items.ElementAt(i)
+                        else
+                            @DummyItem
+                    </div>
+                }
+            }
+        </div>
+        <div class="scroll-btn" @onclick="ShowNextItem">
+            <i class="arrow right" />
+        </div>
+    </div>
+    @if (ShowIndicators)
+    {
+        <div class="indicators-container">
+            @foreach (int i in Enumerable.Range(0, totalNumberOfItems))
+            {
+                <div class="content-indicator @(currentIndex==i?"current":"")" @onclick="()=>ShowItem(i)" />
+            }
+        </div>
+    }
+</div>
+
+@code {
+    protected override void OnInitialized()
+    {
+        if (DummyItem == null)
+        {
+            DummyItem =@<p><em>Loading...</em></p>;
+        }
+        base.OnInitialized();
+    }
+}

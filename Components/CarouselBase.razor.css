@@ -7,15 +7,14 @@
     flex: 1;
     display: flex;
     flex-direction: column;
-    justify-content: stretch;
     width: 100%;
-    max-height:inherit;
 }
 
 .horizontal-scroller-container {
     flex: 1;
     display: flex;
     flex-direction: row;
+    height: 90%;
 }
 
 .horizontal-scroller {
@@ -26,13 +25,16 @@
     scroll-behavior: smooth !important;
     /*This property restricts the position of the item on the scroll*/
     scroll-snap-type: x mandatory;
+    overscroll-behavior-x:auto;
     scrollbar-width: none;
     width: var(--content-width);
 }
 
 .item {
+    /*flex: 1;*/
     display: flex;
     min-width: 100%;
+    width: var(--content-width);
     /*This property restricts the position of the item on the scroll*/
     scroll-snap-align: center;
 }
@@ -52,21 +54,22 @@
     }
 
 .indicators-container {
+    flex: 1;
     align-items: center;
     display: flex;
     justify-content: center;
     gap: 10px;
-    min-height: 10%;
+    height: 10%;
 }
 
 .content-indicator {
+    height: 1rem;
     cursor: pointer;
     background-color: white;
     opacity: 0.5;
     border-radius: 25px;
     border-width: 0;
     width: 5%;
-    height: 0.5rem;
 }
 
     .content-indicator.current {

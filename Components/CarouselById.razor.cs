@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Components.Routing;
 
 namespace RazorSCLibrary.Components
 {
-    public abstract partial class CarouselById : ComponentBase, IDisposable
+    public abstract partial class CarouselById : IDisposable
     {
         [Inject]
         public NavigationManager NavigationManager { get; set; }
@@ -13,10 +13,7 @@ namespace RazorSCLibrary.Components
 
         [Parameter] public required string Id { get; set; }
 
-        public RenderFragment[]? Items { get; set; }
-
-        protected int currentSlide = 0;
-        protected int totalNumberOfItems = 0;
+        public RenderFragment[]? Items { get; set; }        
 
         protected override void OnInitialized()
         {
@@ -27,23 +24,11 @@ namespace RazorSCLibrary.Components
         private void NavigationManager_LocationChanged(object? sender, LocationChangedEventArgs e)
         {
             OnLocationChanged(e.Location.Substring(NavigationManager.BaseUri.Length));
-        }
+        }        
 
-        protected virtual void ScrollLeft()
+        protected override async Task ShowItem(int index)
         {
-            int nextPosition = (currentSlide == 0) ? totalNumberOfItems - 1 : currentSlide - 1;
-            ScrollTo(nextPosition);
-        }
-
-        protected virtual void ScrollRight()
-        {
-            int nextPosition = (currentSlide == totalNumberOfItems - 1) ? 0 : currentSlide + 1;
-            ScrollTo(nextPosition);
-        }
-
-        protected virtual void ScrollTo(int index)
-        {
-            currentSlide = index;
+            currentIndex = index;
             NavigationManager.NavigateTo($"#{GetFullId(index)}", true, true);
         }
 
@@ -61,7 +46,7 @@ namespace RazorSCLibrary.Components
 
         protected virtual void OnItemFocused(int id)
         {
-            currentSlide = id;
+            currentIndex = id;
             StateHasChanged();            
         }
 

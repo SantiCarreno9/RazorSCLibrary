@@ -11,15 +11,18 @@ export function isElementVisible(element) {
     );
 }
 
-export function scrollLeft(container, amount) {
+export function scrollLeft(container, amount, smooth) {
     if (container) {
         const scrollAmount = amount * container.clientWidth;
         const currentPosition = container.scrollLeft;
         const newPosition = currentPosition + scrollAmount;
 
+        let behavior = 'smooth';
+        if (!smooth) behavior = 'instant'
+
         container.scrollTo({
             left: newPosition,
-            behavior: 'smooth'
+            behavior: behavior
         });
         
         return new Promise(resolve => {

@@ -1,8 +1,9 @@
-@using Microsoft.AspNetCore.Components.Routing
+@inherits CarouselBase
 
+@*////////////////// IN PROGRESS/////////////////////////////////*@
 <div id="@Id" class="custom-container">
     <div class="horizontal-scroller-container">
-        <div class="scroll-btn" @onclick="ScrollLeft">
+        <div class="scroll-btn" @onclick="ShowPreviousItem">
             <i class="arrow left" />
         </div>
         <div class="horizontal-scroller">
@@ -21,14 +22,14 @@
                 }
             }
         </div>
-        <div class="scroll-btn" @onclick="ScrollRight">
+        <div class="scroll-btn" @onclick="ShowNextItem">
             <i class="arrow right" />
         </div>
     </div>
     <div class="indicators-container">
         @foreach (int i in Enumerable.Range(0, totalNumberOfItems))
         {
-            <div class="content-indicator @(currentSlide==i?"current":"")" @onclick="()=>ScrollTo(i)" />
+            <div class="content-indicator @(currentIndex==i?"current":"")" @onclick="()=>ShowItem(i)" />
         }
     </div>
 </div>
