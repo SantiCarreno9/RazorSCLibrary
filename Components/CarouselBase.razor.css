@@ -1,5 +1,5 @@
 ::deep {
-    --arrow-width: 10%;
+    --arrow-width: 8%;
     --content-width: calc(100vw - calc(var(--arrow-width)*2));
 }
 

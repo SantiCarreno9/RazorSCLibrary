@@ -38,7 +38,7 @@ export function muteVideo(element) {
 }
 
 export function pauseVideo(element) {
-    if (!element.paused)
+    if (element!=null && !element.paused)
         element.pause();
 }
 
