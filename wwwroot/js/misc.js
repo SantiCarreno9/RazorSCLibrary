@@ -1,4 +1,4 @@
-export function isElementVisible(element) {    
+export function isElementVisible(element) {
     var rect = element.getBoundingClientRect();
     var viewportHeight = window.innerHeight || document.documentElement.clientHeight;
 
@@ -24,7 +24,7 @@ export function scrollLeft(container, amount, smooth) {
             left: newPosition,
             behavior: behavior
         });
-        
+
         return new Promise(resolve => {
             container.addEventListener("scrollend", (event) => {
                 resolve(true);
@@ -34,20 +34,45 @@ export function scrollLeft(container, amount, smooth) {
 };
 
 export function muteVideo(element) {
-    element.muted = true;
+    if (element == null)
+        return;
+    try {
+        element.muted = true;
+    } catch (error) {
+        console.error(error);
+    }
+
 }
 
 export function pauseVideo(element) {
-    if (element!=null && !element.paused)
-        element.pause();
+    if (element == null)
+        return;
+    try {
+        if (element != null && !element.paused)
+            element.pause();
+    } catch (error) {
+        console.error(error);
+    }
 }
 
 export function playVideo(element) {
-    element.play();
+    if (element == null)
+        return;
+    try {
+        element.play();
+    } catch (error) {
+        console.error(error);
+    }
 }
 
 export function stopWebVideo(iframe) {
-    //Reassigns source video to "stop it"
-    let iframeSrc = iframe.src;
-    iframe.src = iframeSrc;
+    if (iframe == null)
+        return;
+    try {
+        let iframeSrc = iframe.src;
+        iframe.src = iframeSrc;
+    }
+    catch (error) {
+        console.error(error);
+    }
 }
